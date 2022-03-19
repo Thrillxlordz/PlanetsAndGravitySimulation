@@ -1,20 +1,25 @@
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
 <script type="text/javascript" src="script.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script>
-  $(document).ready(function(){
-    $('#canvas').on('click', function() {
-      newX = mouseX
-      newY = mouseY
-      createLine(mouseX, mouseY)
-    })
-  })
-</script>
-
 <style>
   body{
-    background-color: lightgray;
+    background-color: black;
+  }
+
+  #canvas {
+    background-color: black;
+    border: 3px solid red;
+  }
+
+  h1 {
+    color: red;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+  a {
+    color: red;
   }
 </style>
 <!DOCTYPE html>
@@ -23,9 +28,7 @@
     <title>Planets and Gravity Simulation</title>
   </head>
   <body>
-    <p>
-      Planets and Gravity Simulation (Under Work)
-    </p>
+    <h1 style="text-align:center">Planets and Gravity Simulation<span style="float:right"><a style="font-size:16px" href="https://thrillxlordz.github.io">Home</a></span></h1>
     <p id="canvas" style="text-align:center">
     </p>
  </body>
