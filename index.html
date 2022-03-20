@@ -2,6 +2,15 @@
 <script type="text/javascript" src="script.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script>
+  $(document).ready(function() {
+    $("#planetSlider").on("change", function() {
+      numPlanets = $("#planetSlider").val()
+      initializeObjects()
+    })
+  })
+</script>
+
 <style>
   body{
     background-color: black;
@@ -21,6 +30,19 @@
   a {
     color: red;
   }
+
+  .sliderInfo {
+    margin-top: -20px;
+  }
+
+  p {
+    margin-bottom: -2%;
+    font-size: 25px;
+  }
+
+  .slider {
+
+  }
 </style>
 <!DOCTYPE html>
 <html>
@@ -28,7 +50,16 @@
     <title>Planets and Gravity Simulation</title>
   </head>
   <body>
-    <h1 style="text-align:center">Planets and Gravity Simulation<span style="float:right"><a style="font-size:16px" href="https://thrillxlordz.github.io">Home</a></span></h1>
+    <h1 style="text-align:center">Planets and Gravity Simulation
+      <span style="float:left" class="sliderInfo">
+        <p># of Planets</p>
+        <input type="range" min="1" max="20" value="10" class="slider" id="planetSlider">
+      </span>
+      <span style="float:right">
+        <a style="font-size:16px" href="https://thrillxlordz.github.io">Home
+        </a>
+      </span>
+    </h1>
     <p id="canvas" style="text-align:center">
     </p>
  </body>

@@ -21,29 +21,7 @@ function setup() {
   myCanvas.parent("#canvas")
   backgroundColor = window.getComputedStyle(document.getElementById("canvas")).getPropertyValue('background-color')
   background(backgroundColor)
-
-  stars = []
-  numStars = canvasX * canvasY / 1000
-  for (let i = 0; i < numStars; i++) {
-    stars.push(new star())
-    stars[i].radius = random(2)
-    stars[i].center = createVector(random(canvasX), random(canvasY))
-    stars[i].color = color(200 + random(50), 200 + random(50), 200 + random(50))
-  }
-
-  planets = []
-  for (let i = 0; i < numPlanets; i++) {
-    planets.push(new planet())
-    planets[i].radius = ceil(minRadius + random(maxRadius - minRadius))
-    planets[i].center = findValidSpot(planets[i])
-    planets[i].mass = pow(planets[i].radius, 3)
-    planets[i].color = color(minBlackness + random(250 - minBlackness), minBlackness + random(250 - minBlackness), minBlackness + random(250 - minBlackness))
-  }
-  myRocket = new rocket()
-  myRocket.radius = 5
-  myRocket.location = findValidSpot(myRocket)
-  myRocket.velocity = createVector(0, 0)
-  myRocket.acceleration = createVector(0, 0)
+  initializeObjects()
 }
 
 function draw() {
@@ -75,9 +53,32 @@ function draw() {
   line(myRocket.location.x, myRocket.location.y, myRocket.location.x + dir.x, myRocket.location.y + dir.y)
 
   myRocket.move()
-  if (collidesWithPlanet(myRocket.location.x, myRocket.location.y, myRocket.radius)) {
-    myRocket.bounceOff(planetHit.center, planetHit.radius)
+}
+
+function initializeObjects() {
+  stars = []
+  numStars = canvasX * canvasY / 1000
+  for (let i = 0; i < numStars; i++) {
+    stars.push(new star())
+    stars[i].radius = random(2)
+    stars[i].center = createVector(random(canvasX), random(canvasY))
+    stars[i].color = color(200 + random(50), 200 + random(50), 200 + random(50))
   }
+
+  planets = []
+  for (let i = 0; i < numPlanets; i++) {
+    planets.push(new planet())
+    planets[i].radius = ceil(minRadius + random(maxRadius - minRadius))
+    planets[i].center = findValidSpot(planets[i])
+    planets[i].mass = pow(planets[i].radius, 3)
+    planets[i].color = color(minBlackness + random(250 - minBlackness), minBlackness + random(250 - minBlackness), minBlackness + random(250 - minBlackness))
+  }
+
+  myRocket = new rocket()
+  myRocket.radius = 5
+  myRocket.location = findValidSpot(myRocket)
+  myRocket.velocity = createVector(0, 0)
+  myRocket.acceleration = createVector(0, 0)
 }
 
 function mousePressed() {
@@ -169,34 +170,37 @@ class rocket {
       ellipse(this.location.x, this.location.y, this.radius * 2)
     }
     this.move = function() {
-      if (this.location.x + this.velocity.x * dt < this.radius || this.location.x + this.velocity.x * dt > canvasX - this.radius) {
-        this.bounceOff(createVector((abs(this.velocity.x) / this.velocity.x) * canvasX * 2, this.location.y), 0)
-      }
-      if (this.location.y + this.velocity.y * dt < this.radius || this.location.y + this.velocity.y * dt > canvasY - this.radius) {
-        this.bounceOff(createVector(this.location.x, (abs(this.velocity.y) / this.velocity.y) * canvasY * 2), 0)
-      }
-      this.location.x += this.velocity.x * dt
-      this.location.y += this.velocity.y * dt
-      this.velocity.x += this.acceleration.x * dt
-      this.velocity.y += this.acceleration.y * dt
       let accel = createVector(0,0)
       for (let i = 0; i < planets.length; i++) {
         accel.add(planets[i].pull(this.location.x, this.location.y))
       }
       this.acceleration.x = accel.x
       this.acceleration.y = accel.y
+      this.velocity.x += this.acceleration.x * dt
+      this.velocity.y += this.acceleration.y * dt
+      if (this.location.x + this.velocity.x * dt < this.radius || this.location.x + this.velocity.x * dt > canvasX - this.radius) {
+        this.bounceOff(createVector((abs(this.velocity.x) / this.velocity.x) * canvasX * 2, this.location.y), 0)
+      }
+      if (this.location.y + this.velocity.y * dt < this.radius || this.location.y + this.velocity.y * dt > canvasY - this.radius) {
+        this.bounceOff(createVector(this.location.x, (abs(this.velocity.y) / this.velocity.y) * canvasY * 2), 0)
+      }
+      if (collidesWithPlanet(myRocket.location.x + this.velocity.x * dt, myRocket.location.y + this.velocity.y * dt, myRocket.radius)) {
+        myRocket.bounceOff(planetHit.center, planetHit.radius)
+      }
+      this.location.x += this.velocity.x * dt
+      this.location.y += this.velocity.y * dt
     }
     this.bounceOff = function(objCenter, objRadius) {
-      if (this.velocity.mag() < this.radius) {
-        console.log("crash landing!")
-      }
       let dir = createVector(0,0)
       dir.x = objCenter.x
       dir.y = objCenter.y
       dir.sub(this.location)
       dir.normalize()
       this.velocity.reflect(dir)
-      this.velocity.mult(0.8)
+      this.velocity.mult(0.5)
+      if (this.velocity.mag() < 20) {
+        this.velocity = createVector(0, 0)
+      }
     }
   }
 }
