@@ -7,7 +7,7 @@ let numPlanets = 10
 let maxRadius = 45
 let minRadius = 15
 let minBlackness = 50
-let gravMult = 3
+let gravMult = 25
 let planetHit
 let myRocket
 let dt = 0.02
@@ -15,7 +15,7 @@ let mouseDown = false
 let clickedLocation
 
 function setup() {
-  canvasX = windowWidth * 0.95
+  canvasX = windowWidth
   canvasY = windowHeight * 0.84
   let myCanvas = createCanvas(canvasX, canvasY)
   myCanvas.parent("#canvas")
@@ -150,7 +150,7 @@ class planet {
       let dir = createVector(this.center.x - x, this.center.y - y)
       dir.normalize()
       dir.mult(this.mass / pow(dist(x, y, this.center.x, this.center.y), 2))
-      dir.mult(4 / 3 * PI * gravMult)
+      dir.mult(gravMult)
       return dir
     }
   }
