@@ -7,6 +7,7 @@ let numPlanets = 10
 let maxRadius = 45
 let minRadius = 15
 let minBlackness = 50
+let gravMult = 3
 let planetHit
 let myRocket
 let dt = 0.02
@@ -149,7 +150,7 @@ class planet {
       let dir = createVector(this.center.x - x, this.center.y - y)
       dir.normalize()
       dir.mult(this.mass / pow(dist(x, y, this.center.x, this.center.y), 2))
-      dir.mult(4 / 3 * PI)
+      dir.mult(4 / 3 * PI * gravMult)
       return dir
     }
   }
