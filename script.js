@@ -82,6 +82,9 @@ function initializeObjects() {
 }
 
 function mousePressed() {
+  if (mouseX < 0 || mouseX > canvasX || mouseY < 0 || mouseY > canvasY) {
+    return
+  }
   mouseDown = true
   clickedLocation = createVector(mouseX, mouseY)
   if (collidesWithPlanet(clickedLocation.x, clickedLocation.y, myRocket.radius)) {
@@ -91,8 +94,11 @@ function mousePressed() {
 }
 
 function mouseClicked() {
+  if (!mouseDown) {
+    return
+  }
   mouseDown = false
-  newVel = createVector(clickedLocation.x - mouseX, clickedLocation.y - mouseY)
+  newVel = createVector(mouseX - clickedLocation.x, mouseY - clickedLocation.y)
   myRocket.velocity = newVel
 }
 
